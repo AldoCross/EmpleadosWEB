@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tabla de Empleados</title>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"> 
+</head>
+<body>
+
+<h1>Empleados</h1>
+
+<form id="employeeForm">
+  Nombre: <input type="text" id="nombre"><br><br>
+  Apellido: <input type="text" id="apellido"><br><br>
+  Número de Empleado: <input type="text" id="numero"><br><br>
+  Puesto: <input type="text" id="puesto"><br><br>
+  <button type="submit">Guardar</button>
+</form>
+
+<table id="employeeTable" class="display">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Número de Empleado</th>
+      <th>Puesto</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function () {
+  var empleados = JSON.parse(localStorage.getItem('empleados')) || []; 
+
+  // Inicializa DataTables
+  var table = $('#employeeTable').DataTable();
+
+  // Carga empleados al iniciar
+  mostrarEmpleados();
+
+  $('#employeeForm').submit(function(event) {
+    event.preventDefault(); 
+
+    var nuevoEmpleado = {
+      nombre: $('#nombre').val(),
+      apellido: $('#apellido').val(),
+      numero: $('#numero').val(),
+      puesto: $('#puesto').val()
+    };
+
+    empleados.push(nuevoEmpleado);
+    localStorage.setItem('empleados', JSON.stringify(empleados));
+
+    mostrarEmpleados(); 
+    this.reset(); 
+  });
+
+  function mostrarEmpleados() {
+    table.clear().draw(); 
+    empleados.forEach(function(empleado) {
+      table.row.add([empleado.nombre, empleado.apellido, empleado.numero, empleado.puesto]).draw(false);
+    });
+  }
+});
+</script>
+
+</body>
+</html>
